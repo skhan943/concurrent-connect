@@ -10,7 +10,7 @@ void Semaphore::notify() {
     cv.notify_one();
 }
 
-// Wait method to decrement count or block if count == 0
+// Wait method to decrement count or block if count <= 0
 void Semaphore::wait() {
     std::unique_lock<std::mutex> lock(mtx);
     cv.wait(lock, [this]() {return count > 0;});
