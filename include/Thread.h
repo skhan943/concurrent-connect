@@ -16,9 +16,6 @@ public:
     // Method to join the thread
     void join();
 
-protected:
-    void start();
-
 private:
     std::thread th; // Thread object
 };
