@@ -17,27 +17,27 @@ public:
     // Destructor to close the socket
     ~Socket();
 
-    // Method to write data
-    int write(const std::string &data);
-
-    // Method to read data
-    int read(std::string &data);
-
-    // Method to open the socket connection (for players)
-    void open();
-
     // Method to bind and listen (for server)
     void bind_and_listen();
 
     // Method to accept a new connection
     Socket* accept();
 
+    // Method to open the socket connection (for players)
+    void open();
+
     // Method to close the socket connection
     void close();
+
+    // Method to write data
+    int write(const std::string &data);
+
+    // Method to read data
+    int read(std::string &data);
 
 private:
     int sockfd; // Socket file descriptor
     struct sockaddr_in server_addr; // Server address structure
-}
+};
 
 #endif // SOCKET_H
