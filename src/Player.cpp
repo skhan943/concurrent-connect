@@ -12,7 +12,7 @@ int main() {
         socket.open();
 
         std::string boardData;
-        
+
         // Read initial board state from server
         socket.read(boardData);
         std::cout << "Current state of board:" << std::endl;
@@ -27,8 +27,22 @@ int main() {
             if (message == "yt") {
                 // Get player's move
                 int move;
-                std::cout << "Enter your move (column number from 0 to 6): ";
-                std::cin >> move;
+                while (true) {
+                    std::cout << "Enter your move (column number from 0 to 6): ";
+                    std::cin >> move;
+
+                    // Validate input
+                    if (std::cin.fail()) {
+                        std::cin.clear(); // Clear the error flag
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+                        std::cout << "Invalid input. Please enter a number between 0 and 6.\n";
+                    } else if (move < 0 || move > 6) {
+                        std::cout << "Invalid move. Please enter a number between 0 and 6.\n";
+                    } else {
+                        break; // Valid input
+                    }
+                }
+
                 std::cout << "\n";
 
                 // Send move to server
