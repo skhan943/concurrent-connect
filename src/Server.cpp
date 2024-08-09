@@ -154,6 +154,9 @@ int main() {
                     Socket* newConn = server.accept();
                     player_queue.push(newConn);
 
+                    // Show the current queue length
+                    std::cout << "Player connected. Current queue length: " << player_queue.size() << std::endl;
+
                     // Check if there are two players waiting
                     if (player_queue.size() >= 2) {
                         Socket* player1 = player_queue.front();
