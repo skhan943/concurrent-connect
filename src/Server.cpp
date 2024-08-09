@@ -29,7 +29,7 @@ private:
     }
 
     // Function to check for win
-    bool check_win(int player){
+    bool checkWin(int player){
 
         // Check horizontal
         for (int i = 0; i < NUM_ROWS; i++){
@@ -83,7 +83,7 @@ public:
     GameThread(Socket& p1, Socket& p2) 
         : Thread([this]() { this->ThreadMain(); }),
           player1(p1), player2(p2), currentPlayer(1), gameOver(false) {
-        std::memset(board, 0, sizeof(board));
+        memset(board, 0, sizeof(board));
     }
 
     ~GameThread() {
@@ -132,7 +132,7 @@ public:
             std::cout << error.what() << std::endl;
         }
     }
-}
+};
 
 // Main server function
 int main() {

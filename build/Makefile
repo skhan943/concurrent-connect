@@ -5,9 +5,9 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
 
 # Directories
-SRC_DIR = src
-INC_DIR = include
-BUILD_DIR = build
+SRC_DIR = ../src
+INC_DIR = ../include
+BUILD_DIR = .
 
 # Source files
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -20,19 +20,24 @@ SERVER = server
 CLIENT = client
 
 # Targets
-all: $(SERVER) $(CLIENT)
+all: print_info $(SERVER) $(CLIENT)
 
-$(SERVER): $(BUILD_DIR)/Server.o $(BUILD_DIR)/Socket.o $(BUILD_DIR)/Thread.o $(BUILD_DIR)/Semaphore.o
+print_info:
+	@echo "Sources: $(SOURCES)"
+	@echo "Objects: $(OBJECTS)"
+	@ls -R $(SRC_DIR)
+
+$(SERVER): Server.o Socket.o Thread.o Semaphore.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(CLIENT): $(BUILD_DIR)/Player.o $(BUILD_DIR)/Socket.o $(BUILD_DIR)/Thread.o $(BUILD_DIR)/Semaphore.o
+$(CLIENT): Player.o Socket.o Thread.o Semaphore.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(BUILD_DIR)
+%.o: $(SRC_DIR)/%.cpp
+	@echo "Compiling $<"
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(SERVER) $(CLIENT)
+	rm -f *.o $(SERVER) $(CLIENT)
 
-.PHONY: all clean
+.PHONY: all clean print_info
