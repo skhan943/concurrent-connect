@@ -78,6 +78,60 @@ private:
             }
         }
     }
+    
+public:
+    GameThread(Socket& p1, Socket& p2) 
+        : Thread([this]() { this->ThreadMain(); }),
+          player1(p1), player2(p2), currentPlayer(1), gameOver(false) {
+        std::memset(board, 0, sizeof(board));
+    }
+
+    ~GameThread() {
+        gameOver = true;
+        player1.write("Server Closed");
+        player2.write("Server Closed");
+    }
+
+    void ThreadMain() {
+        try {
+            std::string boardData = getBoardState();
+            player1.write(boardData);
+            player1.read(boardData); // Ack
+            player2.write(boardData);
+            player2.read(boardData); // Ack
+
+            while (!gameOver) {
+                Socket& currentSocket = (currentPlayer == 1) ? player1 : player2;
+                Socket& otherSocket = (currentPlayer == 1) ? player2 : player1;
+
+                currentSocket.write("yt");
+                std::string moveData;
+                currentSocket.read(moveData);
+                int move = std::stoi(moveData);
+
+                makeMove(move, currentPlayer);
+
+                boardData = getBoardState();
+                currentSocket.write(boardData);
+                currentSocket.read(moveData); // Ack
+                otherSocket.write(boardData);
+                otherSocket.read(moveData); // Ack
+
+                if (checkWin(currentPlayer)) {
+                    std::string winMessage = "Player " + std::to_string(currentPlayer) + " wins!";
+                    currentSocket.write(winMessage);
+                    currentSocket.read(moveData); // Ack
+                    otherSocket.write(winMessage);
+                    otherSocket.read(moveData); // Ack
+                    gameOver = true;
+                }
+
+                currentPlayer = (currentPlayer == 1) ? 2 : 1;
+            }
+        } catch (const std::exception& error) {
+            std::cout << error.what() << std::endl;
+        }
+    }
 }
 
 int main() {
