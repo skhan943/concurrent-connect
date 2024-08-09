@@ -57,3 +57,18 @@ void Socket::open() {
 void Socket::close() {
     ::close(sockfd);
 }
+
+// Method to write data to the socket
+int Socket::write(const std::string &data) {
+    return send(sockfd, data.c_str(), data.size(), 0);
+}
+
+// Method to read data from the socket
+int Socket::read(std::string &data) {
+    char buffer[1024] = {0};
+    int bytesRead = recv(sockfd, buffer, sizeof(buffer), 0);
+    if (bytesRead > 0) {
+        data.assign(buffer, bytesRead);
+    }
+    return bytesRead;
+}
