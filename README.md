@@ -3,6 +3,8 @@
 
 This project implements a multi-threaded Connect Four game server and client in C++. The server manages multiple game sessions concurrently, pairing players as they connect and overseeing the game logic. The communication between the server and clients is handled using TCP sockets. Semaphores are used to manage shared resources.
 
+![concurrent-gif](https://github.com/user-attachments/assets/593c393f-d58f-42c0-9dbb-b00c4fc4d809)
+
 ## Design
 
 ### Threading
