@@ -24,7 +24,7 @@ Socket::Socket(int sockfd) : sockfd(sockfd) {}
 
 // Destructor to close the socket
 Socket::~Socket(){
-    this->close()
+    this->close();
 }
 
 // Method to bind and listen (for server)
