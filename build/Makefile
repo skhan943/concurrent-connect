@@ -16,8 +16,8 @@ SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
 # Executables
-SERVER = server
-CLIENT = client
+SERVER = Server
+CLIENT = Player
 
 # Targets
 all: print_info $(SERVER) $(CLIENT)
