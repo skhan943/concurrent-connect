@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <cstring>
 
 // Constants
 const int NUM_ROWS = 6;
