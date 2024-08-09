@@ -78,7 +78,7 @@ private:
             }
         }
     }
-    
+
 public:
     GameThread(Socket& p1, Socket& p2) 
         : Thread([this]() { this->ThreadMain(); }),
@@ -134,14 +134,60 @@ public:
     }
 }
 
+// Main server function
 int main() {
     std::cout << "I am the server. Type anything to shut down." << std::endl;
 
-    Socket server("127.0.0.1", 2000);
-    server.bind_and_listen();
+    try {
+        // Create server
+        Socket server("127.0.0.1", 2000);
+        server.bind_and_listen();
 
-    std::cin.get();
+        std::vector<GameThread*> games;
+        std::queue<Socket*> player_queue;
 
-    server.close();
+        // Thread to handle incoming connections
+        Thread serverThread([&server, &games, &player_queue]() {
+            while (true) {
+                try {
+                    Socket* newConn = server.accept();
+                    player_queue.push(newConn);
+
+                    // Check if there are two players waiting
+                    if (player_queue.size() >= 2) {
+                        Socket* player1 = player_queue.front();
+                        player_queue.pop();
+                        Socket* player2 = player_queue.front();
+                        player_queue.pop();
+
+                        games.push_back(new GameThread(*player1, *player2));
+                        std::cout << "A game has been started!" << std::endl;
+                    }
+                } catch (const std::exception& error) {
+                    break;
+                }
+            }
+        });
+
+        // Wait for input to shutdown the server
+        std::cin.get();
+
+        // Shut down and clean up
+        server.close();
+
+        for (auto game : games) {
+            delete game;
+        }
+        games.clear();
+
+        while (!player_queue.empty()) {
+            delete player_queue.front();
+            player_queue.pop();
+        }
+
+    } catch (const std::exception& error) {
+        std::cout << error.what() << std::endl;
+    }
+
     return 0;
 }
